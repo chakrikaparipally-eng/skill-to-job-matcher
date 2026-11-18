@@ -275,7 +275,7 @@ export default function ResumeAnalyzerPage() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `SkillBridge_Resume_Report_${Date.now()}.txt`;
+    link.download = `Skill_To_Job_Matcher_Resume_Report_${Date.now()}.txt`;
     link.click();
     URL.revokeObjectURL(url);
   };

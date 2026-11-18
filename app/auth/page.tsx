@@ -100,7 +100,7 @@ function AuthFormContent() {
             href="/"
             className="text-lg font-bold tracking-tight text-[#0B1221] whitespace-nowrap"
           >
-            SkillBridge AI
+            Skill To Job Matcher
           </Link>
           <Link
             href="/"
@@ -183,7 +183,7 @@ function AuthFormContent() {
                 {mode === 'login'
                   ? 'Welcome back'
                   : mode === 'register'
-                  ? 'Create your SkillBridge account'
+                  ? 'Create your Skill To Job Matcher account'
                   : 'Reset your password'}
               </h1>
               <p className="mt-1 text-sm text-slate-600">

@@ -77,7 +77,7 @@ export async function ensureUserAccount(params: {
       }
       const payload: Record<string, unknown> = {
         uid: params.uid,
-        displayName: params.displayName.trim().slice(0, 120) || 'SkillBridge User',
+        displayName: params.displayName.trim().slice(0, 120) || 'Skill To Job Matcher User',
         email: params.email.trim().slice(0, 254),
         accountType: params.accountType,
         createdAt: serverTimestamp(),

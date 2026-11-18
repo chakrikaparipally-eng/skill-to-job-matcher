@@ -1,6 +1,6 @@
-# SkillBridge AI — Skill Development, Resume Intelligence & Job Matching Platform
+# Skill To Job Matcher — Skill Development, Resume Intelligence & Job Matching Platform
 
-SkillBridge AI is a full-stack web platform connecting beginners, learners, job seekers, and recruiters with structured engineering tracks, Gemini-powered PDF/DOCX resume analysis, transparent skill-gap roadmaps, interactive assessments, and real job search integration.
+Skill To Job Matcher is a full-stack web platform connecting beginners, learners, job seekers, and recruiters with structured engineering tracks, Gemini-powered PDF/DOCX resume analysis, transparent skill-gap roadmaps, interactive assessments, and real job search integration.
 
 ## 1. Architecture & Technologies
 
@@ -23,7 +23,7 @@ SkillBridge AI is a full-stack web platform connecting beginners, learners, job 
 4. **AI Skill Gap Analyzer (`/skill-gap`)**
    - Compares candidate skills against target roles or custom job descriptions (`/api/skill-gap/analyze`) into Matched, Missing, Needs Confirmation, and Additional skills with visual charts and per-skill learning plans.
 5. **Real Job Search & AI Matching (`/jobs`, `/applications`)**
-   - Server-side integration with Adzuna and Jooble APIs (`/api/jobs/search`) alongside SkillBridge Recruiter postings (`jobListings`). Never fabricates vacancies when API keys are absent.
+   - Server-side integration with Adzuna and Jooble APIs (`/api/jobs/search`) alongside Skill To Job Matcher Recruiter postings (`jobListings`). Never fabricates vacancies when API keys are absent.
    - Compatibility scoring (`/api/jobs/match`) and application tracking (`savedJobs`, `jobApplications`).
 6. **My Improvement Plan (`/learning-plan`)**
    - Personalized week-by-week learning roadmap (`/api/roadmap/generate`), weekly goals, and daily learning log.

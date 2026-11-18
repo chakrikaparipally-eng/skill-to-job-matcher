@@ -13,7 +13,7 @@ const SAMPLE_TESTIMONIALS = [
     role: 'Junior Data Analyst',
     organization: 'Northstar Logistics',
     statement:
-      'Before SkillBridge AI, my resume missed SQL window functions and data-cleaning metrics. After running the resume rubric and completing the 4-week Analytics roadmap, I raised my job match score from 54% to 86% and landed three interviews.',
+      'Before Skill To Job Matcher, my resume missed SQL window functions and data-cleaning metrics. After running the resume rubric and completing the 4-week Analytics roadmap, I raised my job match score from 54% to 86% and landed three interviews.',
   },
   {
     name: 'Marcus Chen',
@@ -27,7 +27,7 @@ const SAMPLE_TESTIMONIALS = [
     role: 'Technical Recruiter',
     organization: 'Veridian Labs',
     statement:
-      'Reviewing candidates who opt into SkillBridge discovery saves our engineering leads hours. Seeing verified assessment scores alongside structured skills and project summaries lets us shortlist qualified talent transparently.',
+      'Reviewing candidates who opt into Skill To Job Matcher discovery saves our engineering leads hours. Seeing verified assessment scores alongside structured skills and project summaries lets us shortlist qualified talent transparently.',
   },
 ];
 
@@ -54,7 +54,7 @@ export default function LandingPage() {
             href="/"
             className="text-lg font-bold tracking-tight text-[#0B1221] whitespace-nowrap shrink-0"
           >
-            SkillBridge AI
+            Skill To Job Matcher
           </Link>
 
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
@@ -116,7 +116,7 @@ export default function LandingPage() {
                 Build real technical skills and match directly with real jobs.
               </h1>
               <p className="mt-5 text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl">
-                SkillBridge AI connects beginners, learners, job seekers, and recruiters on one unified platform—combining structured tutorials across 10 core engineering disciplines, Gemini-powered PDF/DOCX resume scoring, transparent skill-gap roadmaps, and verified job search.
+                Skill To Job Matcher connects beginners, learners, job seekers, and recruiters on one unified platform—combining structured tutorials across 10 core engineering disciplines, Gemini-powered PDF/DOCX resume scoring, transparent skill-gap roadmaps, and verified job search.
               </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -149,7 +149,7 @@ export default function LandingPage() {
                 ) : (
                   <div className="flex h-full w-full flex-col items-center justify-center p-8 text-center text-slate-300">
                     <Compass className="h-10 w-10 text-blue-400" />
-                    <p className="mt-3 text-sm font-medium">SkillBridge AI Engineering Studio</p>
+                    <p className="mt-3 text-sm font-medium">Skill To Job Matcher Engineering Studio</p>
                   </div>
                 )}
               </div>
@@ -297,7 +297,7 @@ export default function LandingPage() {
 
             <div className="lg:col-span-7">
               <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
-                How SkillBridge AI Works
+                How Skill To Job Matcher Works
               </h2>
               <p className="mt-3 text-sm sm:text-base text-slate-300 max-w-2xl">
                 Every workflow connects verifiable evidence—from the text inside your uploaded resume to real hiring requirements.
@@ -436,7 +436,7 @@ export default function LandingPage() {
               Real job listings paired with transparent compatibility scoring.
             </h2>
             <p className="mt-4 text-sm sm:text-base text-slate-600 leading-relaxed">
-              Search live vacancies from configured external job APIs (Adzuna & Jooble) alongside recruiter-published roles on SkillBridge AI. Candidates control whether their profile is visible to recruiters at all times.
+              Search live vacancies from configured external job APIs (Adzuna & Jooble) alongside recruiter-published roles on Skill To Job Matcher. Candidates control whether their profile is visible to recruiters at all times.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
@@ -494,7 +494,7 @@ export default function LandingPage() {
       <footer className="bg-[#0B1221] text-slate-300 py-12">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
           <div>
-            <p className="text-base font-bold text-white">SkillBridge AI</p>
+            <p className="text-base font-bold text-white">Skill To Job Matcher</p>
             <p className="mt-1 text-xs text-slate-400">
               Skill Development, Resume Intelligence & Real Job Matching Platform
             </p>
@@ -511,7 +511,7 @@ export default function LandingPage() {
             <Link href="/profile" className="hover:text-white">Profile</Link>
           </nav>
           <p className="text-xs text-slate-500">
-            © {new Date().getFullYear()} SkillBridge AI
+            © {new Date().getFullYear()} Skill To Job Matcher
           </p>
         </div>
       </footer>

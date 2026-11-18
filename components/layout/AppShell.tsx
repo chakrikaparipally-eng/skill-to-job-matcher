@@ -102,7 +102,7 @@ export function AppShell({
           href="/"
           className="text-lg font-bold tracking-tight text-white whitespace-nowrap shrink-0"
         >
-          SkillBridge AI
+          Skill To Job Matcher
         </Link>
         <button
           type="button"

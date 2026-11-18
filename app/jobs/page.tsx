@@ -118,7 +118,7 @@ export default function FindJobsPage() {
               requiredSkills: j.requiredSkills,
               preferredSkills: j.preferredSkills,
               description: j.description,
-              source: 'SkillBridge Recruiter',
+              source: 'Skill To Job Matcher Recruiter',
               applyUrl: j.applyUrl || '',
               isInternalRecruiterJob: true,
             }));
@@ -173,7 +173,7 @@ export default function FindJobsPage() {
               requiredSkills: j.requiredSkills,
               preferredSkills: j.preferredSkills,
               description: j.description,
-              source: 'SkillBridge Recruiter',
+              source: 'Skill To Job Matcher Recruiter',
               applyUrl: j.applyUrl || '',
               isInternalRecruiterJob: true,
             }))
@@ -425,7 +425,7 @@ export default function FindJobsPage() {
                   External Job Search API Credentials Not Configured
                 </h2>
                 <p className="leading-relaxed">
-                  SkillBridge AI never displays fabricated external vacancies. To pull live external job listings from Adzuna or Jooble, configure server-side credentials in your environment / Secrets panel:
+                  Skill To Job Matcher never displays fabricated external vacancies. To pull live external job listings from Adzuna or Jooble, configure server-side credentials in your environment / Secrets panel:
                 </p>
                 <ul className="list-disc pl-5 space-y-1">
                   <li>
@@ -455,7 +455,7 @@ export default function FindJobsPage() {
                   </li>
                 </ul>
                 <p className="text-amber-900">
-                  Recruiter-published vacancies stored in SkillBridge Firestore remain searchable below when signed in.
+                  Recruiter-published vacancies stored in Skill To Job Matcher Firestore remain searchable below when signed in.
                 </p>
               </div>
             </div>
@@ -646,7 +646,7 @@ export default function FindJobsPage() {
                         onClick={() => handleTrackApplied(job)}
                         className="inline-flex items-center gap-1.5 rounded-lg bg-[#0B1221] px-4 py-2 text-xs font-semibold text-white hover:bg-slate-800"
                       >
-                        Apply via SkillBridge
+                        Apply via Skill To Job Matcher
                       </button>
                     )}
                   </div>

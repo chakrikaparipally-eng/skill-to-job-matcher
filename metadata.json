@@ -1,6 +1,8 @@
 {
-  "name": "SkillBridge AI",
+  "name": "Skill To Job Matcher",
   "description": "AI-powered skill development, resume intelligence, skill-gap analysis, and real job matching platform connecting learners, job seekers, and recruiters.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

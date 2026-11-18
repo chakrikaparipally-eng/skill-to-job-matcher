@@ -23,18 +23,18 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'SkillBridge AI — Skill Development, Resume Intelligence & Job Matching',
+  title: 'Skill To Job Matcher — Skill Development, Resume Intelligence & Job Matching',
   description:
-    'AI-powered platform connecting beginners, learners, job seekers, and recruiters with structured technical roadmaps, resume scoring, skill-gap analysis, and real job matching.',
+    'AI-powered skill development, resume intelligence, skill-gap analysis, and real job matching platform connecting learners, job seekers, and recruiters.',
   openGraph: {
-    title: 'SkillBridge AI — Skill Development, Resume Intelligence & Job Matching',
+    title: 'Skill To Job Matcher — Skill Development, Resume Intelligence & Job Matching',
     description:
       'Build technical skills across 10 engineering domains, analyze PDF/DOCX resumes with Gemini AI, uncover skill gaps, and match with real vacancies.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'SkillBridge AI',
+    title: 'Skill To Job Matcher',
     description:
       'Skill development, AI resume analysis, skill-gap roadmaps, and real job matching.',
   },

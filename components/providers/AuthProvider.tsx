@@ -105,7 +105,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (!account) {
         account = await ensureUserAccount({
           uid: user.uid,
-          displayName: user.displayName || user.email?.split('@')[0] || 'SkillBridge Member',
+          displayName: user.displayName || user.email?.split('@')[0] || 'Skill To Job Matcher Member',
           email: user.email || '',
           photoURL: user.photoURL || undefined,
           accountType: storedRole,
