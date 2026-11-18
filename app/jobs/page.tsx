@@ -21,6 +21,7 @@ import {
   trackJobApplication,
 } from '@/lib/firestore-service';
 import { JobMatchEvaluation, UnifiedJobItem } from '@/lib/types';
+import { apiUrl, safeParseJsonResponse } from '@/lib/safe-api';
 
 export default function FindJobsPage() {
   const { firebaseUser, candidateProfile } = useAuth();
@@ -68,12 +69,27 @@ export default function FindJobsPage() {
         if (minSalary.trim()) params.set('minSalary', minSalary.trim());
         params.set('page', String(targetPage));
 
-        const res = await fetch(`/api/jobs/search?${params.toString()}`);
-        const data = await res.json();
-        setHasExternalApi(Boolean(data.hasExternalApi));
-        setExternalJobs(data.jobs || []);
-        setTotalExternal(data.totalResults || 0);
-        setProviderErrors(data.providerErrors || []);
+        const res = await fetch(apiUrl(`/api/jobs/search?${params.toString()}`));
+        const parsed = await safeParseJsonResponse<{
+          hasExternalApi?: boolean;
+          jobs?: UnifiedJobItem[];
+          totalResults?: number;
+          providerErrors?: string[];
+        }>(res);
+
+        if (parsed.ok && parsed.data) {
+          setHasExternalApi(Boolean(parsed.data.hasExternalApi));
+          setExternalJobs(parsed.data.jobs || []);
+          setTotalExternal(parsed.data.totalResults || 0);
+          setProviderErrors(parsed.data.providerErrors || []);
+        } else if (parsed.isStaticHost) {
+          setHasExternalApi(false);
+          setExternalJobs([]);
+          setTotalExternal(0);
+          setProviderErrors([]);
+        } else {
+          throw new Error(parsed.error || 'Failed to fetch job listings.');
+        }
 
         if (firebaseUser && firebaseUser.emailVerified) {
           const internal = await getOpenJobListings();
@@ -148,14 +164,30 @@ export default function FindJobsPage() {
     let active = true;
     const params = new URLSearchParams({ country: 'us', page: '1' });
 
-    fetch(`/api/jobs/search?${params.toString()}`)
-      .then((res) => res.json())
-      .then(async (data) => {
+    fetch(apiUrl(`/api/jobs/search?${params.toString()}`))
+      .then((res) =>
+        safeParseJsonResponse<{
+          hasExternalApi?: boolean;
+          jobs?: UnifiedJobItem[];
+          totalResults?: number;
+          providerErrors?: string[];
+        }>(res)
+      )
+      .then(async (parsed) => {
         if (!active) return;
-        setHasExternalApi(Boolean(data.hasExternalApi));
-        setExternalJobs(data.jobs || []);
-        setTotalExternal(data.totalResults || 0);
-        setProviderErrors(data.providerErrors || []);
+        if (parsed.ok && parsed.data) {
+          setHasExternalApi(Boolean(parsed.data.hasExternalApi));
+          setExternalJobs(parsed.data.jobs || []);
+          setTotalExternal(parsed.data.totalResults || 0);
+          setProviderErrors(parsed.data.providerErrors || []);
+        } else if (parsed.isStaticHost) {
+          setHasExternalApi(false);
+          setExternalJobs([]);
+          setTotalExternal(0);
+          setProviderErrors([]);
+        } else {
+          throw new Error(parsed.error || 'Failed to fetch job listings.');
+        }
 
         if (firebaseUser && firebaseUser.emailVerified) {
           const internal = await getOpenJobListings();
@@ -212,7 +244,7 @@ export default function FindJobsPage() {
     setMatching(true);
     setError(null);
     try {
-      const res = await fetch('/api/jobs/match', {
+      const res = await fetch(apiUrl('/api/jobs/match'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -236,10 +268,12 @@ export default function FindJobsPage() {
           })),
         }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'AI job matching failed.');
+      const parsed = await safeParseJsonResponse<{ evaluations?: JobMatchEvaluation[] }>(res);
+      if (!parsed.ok || !parsed.data) {
+        throw new Error(parsed.error || 'AI job matching failed.');
+      }
       const nextMap: Record<string, JobMatchEvaluation> = {};
-      for (const ev of data.evaluations || []) {
+      for (const ev of parsed.data.evaluations || []) {
         nextMap[ev.jobKey] = ev;
       }
       setMatchMap(nextMap);

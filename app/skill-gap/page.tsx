@@ -23,7 +23,7 @@ import {
   CartesianGrid,
 } from 'recharts';
 import { AppShell } from '@/components/layout/AppShell';
-import { TARGET_ROLE_BENCHMARKS } from '@/lib/curriculum';
+import { TARGET_ROLE_BENCHMARKS, ALL_SKILLS } from '@/lib/curriculum';
 import { useAuth } from '@/components/providers/AuthProvider';
 import {
   saveSkillGapReport,
@@ -31,6 +31,7 @@ import {
   getUserSkillGapReports,
 } from '@/lib/firestore-service';
 import { MissingSkillPlan, RoadmapWeekItem, SkillGapReport } from '@/lib/types';
+import { apiUrl, safeParseJsonResponse } from '@/lib/safe-api';
 
 interface GapAnalysisOutput {
   targetRole: string;
@@ -100,20 +101,107 @@ function SkillGapWorkspace({
     setNotice(null);
     setAnalyzing(true);
     try {
-      const res = await fetch('/api/skill-gap/analyze', {
+      const activeConfirmed = overrideConfirmed ?? confirmedSkills;
+      const res = await fetch(apiUrl('/api/skill-gap/analyze'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           candidateSkills,
-          confirmedSkills: overrideConfirmed ?? confirmedSkills,
+          confirmedSkills: activeConfirmed,
           targetRole,
           jobDescription,
           requiredSkills: selectedBenchmark?.requiredSkills || [],
           preferredSkills: selectedBenchmark?.preferredSkills || [],
         }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to compute skill gap.');
+      const parsed = await safeParseJsonResponse<GapAnalysisOutput>(res);
+
+      let data: GapAnalysisOutput;
+      if (parsed.ok && parsed.data) {
+        data = parsed.data;
+      } else if (parsed.isStaticHost) {
+        const knownNormalized = Array.from(
+          new Set([...candidateSkills, ...activeConfirmed].map((s) => s.trim()).filter(Boolean))
+        );
+        const knownLower = new Set(knownNormalized.map((s) => s.toLowerCase()));
+        const targetReqs = Array.from(
+          new Set([
+            ...(selectedBenchmark?.requiredSkills || []),
+            ...(selectedBenchmark?.preferredSkills || []),
+          ])
+        );
+        const matchedSkills = targetReqs.filter((req) =>
+          knownNormalized.some(
+            (k) =>
+              k.toLowerCase() === req.toLowerCase() ||
+              k.toLowerCase().includes(req.toLowerCase()) ||
+              req.toLowerCase().includes(k.toLowerCase())
+          )
+        );
+        const missingSkills = targetReqs.filter((req) => !matchedSkills.includes(req));
+        const targetLower = new Set(targetReqs.map((r) => r.toLowerCase()));
+        const additionalSkills = knownNormalized.filter(
+          (k) =>
+            !Array.from(targetLower).some(
+              (t) => t === k.toLowerCase() || t.includes(k.toLowerCase()) || k.toLowerCase().includes(t)
+            )
+        );
+        const totalTarget = matchedSkills.length + missingSkills.length;
+        const matchPercentage =
+          totalTarget > 0 ? Math.round((matchedSkills.length / totalTarget) * 100) : 0;
+
+        const matchingTrack = ALL_SKILLS.find(
+          (sk) =>
+            sk.title.toLowerCase().includes(targetRole.toLowerCase()) ||
+            missingSkills.some((m) =>
+              sk.title.toLowerCase().includes(m.toLowerCase())
+            )
+        );
+
+        const missingSkillPlans: MissingSkillPlan[] = missingSkills.map((sk) => ({
+          skill: sk,
+          whyRequired: `${sk} is part of the benchmark skill set for ${targetRole}.`,
+          roadmapSteps: [
+            `Review core fundamentals and syntax of ${sk}.`,
+            `Complete structured practice exercises and build a focused mini-project using ${sk}.`,
+          ],
+          recommendedCourses: matchingTrack ? [matchingTrack.title] : [],
+          freeResources: (matchingTrack?.resources || []).slice(0, 2).map((r) => ({
+            title: r.title,
+            url: r.url,
+          })),
+          estimatedLearningTime: '1–2 weeks',
+          practiceExercises: [`Build a small working module applying ${sk}.`],
+          miniProjectSuggestion: `Create a portfolio snippet demonstrating ${sk} in a ${targetRole} workflow.`,
+        }));
+
+        const personalizedRoadmap: RoadmapWeekItem[] = missingSkills.slice(0, 8).map((sk, idx) => ({
+          week: idx + 1,
+          title: `Master ${sk}`,
+          focusSkills: [sk],
+          tasks: [
+            `Study core concepts and official documentation for ${sk}`,
+            `Build a hands-on mini-project applying ${sk}`,
+          ],
+          milestone: `Complete ${sk} practice deliverable`,
+          completed: false,
+        }));
+
+        data = {
+          targetRole,
+          matchedSkills,
+          missingSkills,
+          uncertainSkills: knownLower.size === 0 ? [] : [],
+          additionalSkills,
+          matchPercentage,
+          matchFormulaNote: `Static Benchmark Mode: ${matchedSkills.length} matched out of ${totalTarget} benchmark skills (${matchPercentage}%). Deploy with Vercel or Docker for Gemini deep job-description parsing.`,
+          missingSkillPlans,
+          personalizedRoadmap,
+        };
+      } else {
+        throw new Error(parsed.error || 'Failed to compute skill gap.');
+      }
+
       setResult(data);
 
       if (firebaseUser && firebaseUser.emailVerified) {

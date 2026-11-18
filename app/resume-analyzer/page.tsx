@@ -36,6 +36,7 @@ import {
   ResumeOverview,
   ResumeScoreBreakdown,
 } from '@/lib/types';
+import { apiUrl, safeParseJsonResponse } from '@/lib/safe-api';
 
 export default function ResumeAnalyzerPage() {
   const { firebaseUser, candidateProfile, refreshCandidateProfile } = useAuth();
@@ -86,14 +87,20 @@ export default function ResumeAnalyzerPage() {
       const formData = new FormData();
       formData.append('file', selectedFile);
 
-      const parseRes = await fetch('/api/resume/parse', {
+      const parseRes = await fetch(apiUrl('/api/resume/parse'), {
         method: 'POST',
         body: formData,
       });
-      const parseData = await parseRes.json();
-      if (!parseRes.ok) {
-        throw new Error(parseData.error || 'Could not extract text from this file.');
+      const parsedFileResp = await safeParseJsonResponse<{
+        extractedText: string;
+        fileName: string;
+        fileType: 'pdf' | 'docx';
+        fileSize: number;
+      }>(parseRes);
+      if (!parsedFileResp.ok || !parsedFileResp.data) {
+        throw new Error(parsedFileResp.error || 'Could not extract text from this file.');
       }
+      const parseData = parsedFileResp.data;
 
       setExtractedText(parseData.extractedText);
       setFileMeta({
@@ -103,7 +110,7 @@ export default function ResumeAnalyzerPage() {
       });
 
       setStepStatus('analyzing');
-      const analyzeRes = await fetch('/api/resume/analyze', {
+      const analyzeRes = await fetch(apiUrl('/api/resume/analyze'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -111,10 +118,16 @@ export default function ResumeAnalyzerPage() {
           fileName: parseData.fileName,
         }),
       });
-      const analyzeData = await analyzeRes.json();
-      if (!analyzeRes.ok) {
-        throw new Error(analyzeData.error || 'Gemini analysis failed.');
+      const parsedAnalysisResp = await safeParseJsonResponse<{
+        extractedProfile: ParsedResumeProfile;
+        overview: ResumeOverview;
+        scoreBreakdown: ResumeScoreBreakdown;
+        improvements: ResumeImprovements;
+      }>(analyzeRes);
+      if (!parsedAnalysisResp.ok || !parsedAnalysisResp.data) {
+        throw new Error(parsedAnalysisResp.error || 'Gemini analysis failed.');
       }
+      const analyzeData = parsedAnalysisResp.data;
 
       const parsedProf: ParsedResumeProfile = analyzeData.extractedProfile;
       setProfileForm(parsedProf);

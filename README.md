@@ -46,17 +46,22 @@ Configure secrets in `.env` or your hosting environment:
 
 ## 5. Running Locally & Deploying from GitHub
 
-> **Important Note on GitHub Pages vs. Full-Stack Hosting:**
-> Enabling **GitHub Pages** directly from the `main` branch only serves static files (and falls back to rendering this `README.md` intro because Next.js server routes and `GEMINI_API_KEY` cannot execute on static GitHub Pages). To deploy the **full interactive website** from your GitHub repository (including `/api/*` Gemini AI routes, PDF/DOCX parsing, and Firebase Auth), deploy via a Next.js-capable host connected to GitHub:
+### Option A: Deploy Full Multi-Page Website on GitHub Pages (Included Workflow)
+GitHub's default branch-based Pages setting (`Deploy from a branch`) only renders `README.md` when no root `index.html` exists. This repository includes `.github/workflows/deploy-pages.yml` to export and publish **all website pages** (`/`, `/skills`, `/skills/*`, `/courses`, `/quizzes`, `/resume-analyzer`, `/skill-gap`, `/jobs`, `/learning-plan`, `/applications`, `/profile`, `/dashboard`, `/recruiter`, `/auth`):
+1. Push this repository to GitHub (`main` branch).
+2. On GitHub, open **Settings → Pages → Build and deployment → Source** and select **GitHub Actions**.
+3. The **Deploy Full Website to GitHub Pages** workflow runs automatically and publishes the complete website.
+4. In **Firebase Console → Authentication → Settings → Authorized domains**, add `<your-username>.github.io` so Google Sign-In and Firestore persistence work on your GitHub Pages URL.
+> Note: GitHub Pages serves static assets only, so server-side `/api/*` Gemini/Adzuna/Jooble endpoints are inactive there; all 10 skill learning tracks, built-in quizzes, Firebase Auth, Firestore profiles, recruiter job listings, and client-side benchmark skill-gap analysis work out of the box.
 
-### Option A: Deploy Full Website from GitHub using Vercel (Recommended)
+### Option B: Deploy Full-Stack Website + Server AI (`/api/*`) from GitHub using Vercel (Recommended for Gemini AI & Resume Upload)
 1. Push this repository to GitHub.
 2. Go to [vercel.com/new](https://vercel.com/new) and import your GitHub repository (`vercel.json` is pre-configured).
 3. Add environment variable `GEMINI_API_KEY` (and optional `ADZUNA_APP_ID`, `ADZUNA_APP_KEY`, `JOOBLE_API_KEY`) in Project Settings → Environment Variables.
 4. Deploy.
 5. In **Firebase Console → Authentication → Settings → Authorized domains**, add your deployed domain (for example, `your-project.vercel.app`) so Google Sign-In works on the live site.
 
-### Option B: Deploy Full Website from GitHub using Docker (Cloud Run / Render / Railway)
+### Option C: Deploy Full-Stack Website using Docker (Cloud Run / Render / Railway)
 Use the included `Dockerfile` (built around Next.js `output: 'standalone'`) and set `GEMINI_API_KEY` in your service environment variables. Add the resulting public hostname to Firebase Authorized Domains.
 
 ### Local Commands

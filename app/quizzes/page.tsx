@@ -25,6 +25,7 @@ import { ALL_SKILLS } from '@/lib/curriculum';
 import { useAuth } from '@/components/providers/AuthProvider';
 import { getUserQuizResults, saveQuizResult } from '@/lib/firestore-service';
 import { DifficultyLevel, QuizQuestion, QuizResult } from '@/lib/types';
+import { apiUrl, safeParseJsonResponse } from '@/lib/safe-api';
 
 function QuizEngineContent() {
   const searchParams = useSearchParams();
@@ -151,7 +152,7 @@ function QuizEngineContent() {
     setGenError(null);
     setGenerating(true);
     try {
-      const res = await fetch('/api/quiz/generate', {
+      const res = await fetch(apiUrl('/api/quiz/generate'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -161,11 +162,11 @@ function QuizEngineContent() {
           count: 5,
         }),
       });
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to generate quiz questions.');
+      const parsed = await safeParseJsonResponse<{ questions?: QuizQuestion[] }>(res);
+      if (!parsed.ok || !parsed.data) {
+        throw new Error(parsed.error || 'Failed to generate quiz questions.');
       }
-      const pool: QuizQuestion[] = data.questions || [];
+      const pool: QuizQuestion[] = parsed.data.questions || [];
       const duration = Math.max(180, pool.length * 60);
       setQuestions(pool);
       setAnswers({});

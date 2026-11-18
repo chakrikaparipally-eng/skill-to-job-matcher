@@ -1,5 +1,8 @@
 import type { NextConfig } from 'next';
 
+const isGithubPages = process.env.GITHUB_PAGES === 'true';
+const basePath = isGithubPages ? process.env.NEXT_PUBLIC_BASE_PATH || '' : '';
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   eslint: {
@@ -12,7 +15,14 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
-  output: 'standalone',
+  output: isGithubPages ? 'export' : 'standalone',
+  ...(isGithubPages
+    ? {
+        trailingSlash: true,
+        basePath,
+        assetPrefix: basePath,
+      }
+    : {}),
   transpilePackages: ['motion'],
   webpack: (config, { dev }) => {
     if (dev && process.env.DISABLE_HMR === 'true') {

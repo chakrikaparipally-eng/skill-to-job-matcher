@@ -22,6 +22,7 @@ import {
   upsertLearningProgress,
 } from '@/lib/firestore-service';
 import { DailyActivityItem, RoadmapWeekItem, WeeklyGoalItem } from '@/lib/types';
+import { apiUrl, safeParseJsonResponse } from '@/lib/safe-api';
 
 export default function LearningPlanPage() {
   const { firebaseUser, candidateProfile } = useAuth();
@@ -103,7 +104,7 @@ export default function LearningPlanPage() {
       const weakTopics = Array.from(new Set(quizResults.flatMap((q) => q.weakTopics || [])));
       const missingSkills = gapReports[0]?.missingSkills || [];
 
-      const res = await fetch('/api/roadmap/generate', {
+      const res = await fetch(apiUrl('/api/roadmap/generate'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -114,10 +115,12 @@ export default function LearningPlanPage() {
           weeksCount,
         }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to generate improvement plan.');
+      const parsed = await safeParseJsonResponse<{ roadmap?: RoadmapWeekItem[] }>(res);
+      if (!parsed.ok || !parsed.data) {
+        throw new Error(parsed.error || 'Failed to generate improvement plan.');
+      }
 
-      const newRoadmap: RoadmapWeekItem[] = data.roadmap || [];
+      const newRoadmap: RoadmapWeekItem[] = parsed.data.roadmap || [];
       setRoadmap(newRoadmap);
       await persistPlan(newRoadmap, weeklyGoals, dailyActivities, targetRole);
       setNotice('Personalized improvement roadmap generated and saved to Firestore.');
