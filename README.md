@@ -1,11 +1,55 @@
-<div align="center">
+# SkillBridge AI — Skill Development, Resume Intelligence & Job Matching Platform
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+SkillBridge AI is a full-stack web platform connecting beginners, learners, job seekers, and recruiters with structured engineering tracks, Gemini-powered PDF/DOCX resume analysis, transparent skill-gap roadmaps, interactive assessments, and real job search integration.
 
-  <h1>Built with AI Studio</h2>
+## 1. Architecture & Technologies
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+- **Frontend**: Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS v4, Recharts, Lucide React
+- **Backend**: Next.js Server Route Handlers (`/app/api/*`) with Zod payload validation
+- **AI Engine**: Google Gemini API (`@google/genai`, model `gemini-4-hydrogen`) executed strictly on the server
+- **Document Parsing**: `unpdf` (PDF text & encrypted/scanned error detection) and `mammoth` (DOCX raw text extraction)
+- **Database & Auth**: Firebase Authentication (Google Sign-In + Email/Password) & Cloud Firestore with hardened security rules (`firestore.rules`)
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+## 2. Core Modules
 
-</div>
+1. **10 Technical Skill Learning Tracks (`/skills`, `/skills/[slug]`, `/courses`)**
+   - Python Programming, Data Analytics, Data Science, Machine Learning, AI Engineering & Generative AI, Frontend Web Development, Backend Development, Full-Stack Development, Cloud Computing & DevOps, and Cybersecurity.
+   - Each skill page includes introduction, prerequisites, roadmap phases, beginner-to-advanced lessons with code examples, video/documentation/free resource links, mini-projects, practice prompts, completion percentages, and badges.
+2. **Interactive Quiz & Assessment Engine (`/quizzes`)**
+   - Multiple-choice, true/false, technical, and coding challenge questions across Beginner, Intermediate, and Advanced tiers with countdown timer, explanations, strong/weak topic diagnostics, Recharts performance charts, and Gemini question generation (`/api/quiz/generate`).
+3. **AI Resume Analyzer (`/resume-analyzer`)**
+   - Extracts actual text from uploaded `.pdf` and `.docx` files via `/api/resume/parse`.
+   - Evaluates strictly grounded profile details, 100-point rubric score breakdown, missing keywords, project rewrites, editable candidate profile sync, and downloadable report.
+4. **AI Skill Gap Analyzer (`/skill-gap`)**
+   - Compares candidate skills against target roles or custom job descriptions (`/api/skill-gap/analyze`) into Matched, Missing, Needs Confirmation, and Additional skills with visual charts and per-skill learning plans.
+5. **Real Job Search & AI Matching (`/jobs`, `/applications`)**
+   - Server-side integration with Adzuna and Jooble APIs (`/api/jobs/search`) alongside SkillBridge Recruiter postings (`jobListings`). Never fabricates vacancies when API keys are absent.
+   - Compatibility scoring (`/api/jobs/match`) and application tracking (`savedJobs`, `jobApplications`).
+6. **My Improvement Plan (`/learning-plan`)**
+   - Personalized week-by-week learning roadmap (`/api/roadmap/generate`), weekly goals, and daily learning log.
+7. **Recruiter Hub (`/recruiter`)**
+   - Company profiles, job posting CRUD, opt-in candidate search (`shareWithRecruiters == true`), match percentages, and shortlists (`recruiterShortlists`).
+
+## 3. Firestore Database Structure
+
+Collections defined in `firebase-blueprint.json` and secured in `firestore.rules`:
+- `users`, `candidateProfiles`, `recruiterProfiles`, `resumes`, `resumeAnalyses`, `skills`, `courses`, `lessons`, `quizzes`, `quizResults`, `learningProgress`, `jobListings`, `savedJobs`, `jobApplications`, `skillGapReports`, `recruiterShortlists`.
+
+## 4. Configuration & Environment Variables
+
+Configure secrets in `.env` or your hosting environment:
+- `GEMINI_API_KEY`: Server-side Gemini API key (never exposed to browser code)
+- `ADZUNA_APP_ID` & `ADZUNA_APP_KEY`: Optional credentials from `developer.adzuna.com` for live external job search
+- `JOOBLE_API_KEY`: Optional credential from `jooble.org/api/about` for live external job search
+- Firebase client configuration is stored in `firebase-applet-config.json`.
+- **Email/Password Sign-In**: Google Sign-In works immediately; if using Email/Password sign-up/login, ensure the **Email/Password** sign-in provider is enabled in Firebase Console → Authentication → Sign-in method.
+
+## 5. Running & Deploying
+
+```bash
+npm install
+npm run dev       # Starts development server on port 3000
+npm run lint      # Runs Next.js & Firebase security rules ESLint checks
+npm run build     # Builds production standalone bundle
+npm run start     # Starts production server
+```

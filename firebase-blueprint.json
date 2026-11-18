@@ -1,0 +1,349 @@
+{
+  "entities": {
+    "UserAccount": {
+      "title": "UserAccount",
+      "description": "Authenticated user account and private identity metadata.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "email": { "type": "string", "format": "email", "maxLength": 254 },
+        "photoURL": { "type": "string", "maxLength": 1000 },
+        "accountType": { "type": "string", "enum": ["learner", "job_seeker", "recruiter"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "displayName", "email", "accountType", "createdAt", "updatedAt"]
+    },
+    "CandidateProfile": {
+      "title": "CandidateProfile",
+      "description": "Structured candidate skills, education, projects, and recruiter-sharing preferences.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "fullName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "headline": { "type": "string", "maxLength": 200 },
+        "location": { "type": "string", "maxLength": 120 },
+        "targetRole": { "type": "string", "maxLength": 120 },
+        "education": { "type": "array", "maxLength": 10 },
+        "skills": { "type": "array", "maxLength": 60 },
+        "programmingLanguages": { "type": "array", "maxLength": 30 },
+        "frameworksTools": { "type": "array", "maxLength": 40 },
+        "projects": { "type": "array", "maxLength": 15 },
+        "internships": { "type": "array", "maxLength": 15 },
+        "workExperience": { "type": "array", "maxLength": 15 },
+        "certifications": { "type": "array", "maxLength": 20 },
+        "achievements": { "type": "array", "maxLength": 20 },
+        "shareWithRecruiters": { "type": "boolean" },
+        "resumeScore": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "fullName", "skills", "shareWithRecruiters", "createdAt", "updatedAt"]
+    },
+    "RecruiterProfile": {
+      "title": "RecruiterProfile",
+      "description": "Recruiter company and hiring profile.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "recruiterName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "companyName": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "companyWebsite": { "type": "string", "maxLength": 500 },
+        "industry": { "type": "string", "maxLength": 100 },
+        "companySize": { "type": "string", "maxLength": 60 },
+        "location": { "type": "string", "maxLength": 120 },
+        "description": { "type": "string", "maxLength": 2000 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "recruiterName", "companyName", "createdAt", "updatedAt"]
+    },
+    "ResumeDocument": {
+      "title": "ResumeDocument",
+      "description": "Uploaded PDF or DOCX resume extracted text and parsed fields.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "fileName": { "type": "string", "minLength": 1, "maxLength": 255 },
+        "fileType": { "type": "string", "enum": ["pdf", "docx"] },
+        "fileSize": { "type": "number" },
+        "extractedText": { "type": "string", "minLength": 1, "maxLength": 100000 },
+        "parsedProfile": { "type": "object" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "fileName", "fileType", "fileSize", "extractedText", "parsedProfile", "createdAt", "updatedAt"]
+    },
+    "ResumeAnalysis": {
+      "title": "ResumeAnalysis",
+      "description": "AI evaluation, 100-point rubric score, and improvement plan for a resume.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "resumeId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "fileName": { "type": "string", "minLength": 1, "maxLength": 255 },
+        "overview": { "type": "object" },
+        "scoreBreakdown": { "type": "object" },
+        "improvements": { "type": "object" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "resumeId", "fileName", "overview", "scoreBreakdown", "improvements", "createdAt"]
+    },
+    "SkillCatalogItem": {
+      "title": "SkillCatalogItem",
+      "description": "Public technical skill domain metadata.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "slug": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "category": { "type": "string", "maxLength": 80 },
+        "description": { "type": "string", "maxLength": 2000 }
+      },
+      "required": ["id", "slug", "title", "category", "description"]
+    },
+    "CourseCatalogItem": {
+      "title": "CourseCatalogItem",
+      "description": "Public structured course module for a technical skill.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "skillId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "level": { "type": "string", "enum": ["Beginner", "Intermediate", "Advanced"] },
+        "estimatedHours": { "type": "number" }
+      },
+      "required": ["id", "skillId", "title", "level"]
+    },
+    "LessonCatalogItem": {
+      "title": "LessonCatalogItem",
+      "description": "Public lesson unit within a skill course.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "skillId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "courseId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "summary": { "type": "string", "maxLength": 2000 }
+      },
+      "required": ["id", "skillId", "courseId", "title"]
+    },
+    "QuizCatalogItem": {
+      "title": "QuizCatalogItem",
+      "description": "Public quiz assessment template for a technical skill.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "skillId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "difficulty": { "type": "string", "enum": ["beginner", "intermediate", "advanced"] }
+      },
+      "required": ["id", "skillId", "title", "difficulty"]
+    },
+    "QuizResult": {
+      "title": "QuizResult",
+      "description": "Candidate quiz attempt result and topic mastery breakdown.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "skillId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "skillTitle": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "quizId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "difficulty": { "type": "string", "enum": ["beginner", "intermediate", "advanced"] },
+        "totalQuestions": { "type": "number" },
+        "correctAnswers": { "type": "number" },
+        "incorrectAnswers": { "type": "number" },
+        "percentage": { "type": "number" },
+        "strongTopics": { "type": "array", "maxLength": 30 },
+        "weakTopics": { "type": "array", "maxLength": 30 },
+        "recommendedTopics": { "type": "array", "maxLength": 30 },
+        "timeSpentSeconds": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "skillId", "skillTitle", "quizId", "difficulty", "totalQuestions", "correctAnswers", "incorrectAnswers", "percentage", "strongTopics", "weakTopics", "recommendedTopics", "createdAt"]
+    },
+    "LearningProgress": {
+      "title": "LearningProgress",
+      "description": "Candidate skill module completion, weekly goals, and personalized roadmap.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "skillId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "completedLessonIds": { "type": "array", "maxLength": 100 },
+        "weeklyGoals": { "type": "array", "maxLength": 30 },
+        "dailyActivities": { "type": "array", "maxLength": 60 },
+        "customRoadmap": { "type": "array", "maxLength": 24 },
+        "targetRole": { "type": "string", "maxLength": 120 },
+        "completionPercentage": { "type": "number" },
+        "badgeEarned": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "skillId", "completedLessonIds", "completionPercentage", "badgeEarned", "createdAt", "updatedAt"]
+    },
+    "JobListing": {
+      "title": "JobListing",
+      "description": "Recruiter-published job posting.",
+      "type": "object",
+      "properties": {
+        "recruiterId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "minLength": 2, "maxLength": 160 },
+        "companyName": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "location": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "workMode": { "type": "string", "enum": ["Remote", "Hybrid", "Onsite"] },
+        "employmentType": { "type": "string", "enum": ["Full-time", "Part-time", "Contract", "Internship"] },
+        "experienceLevel": { "type": "string", "enum": ["Entry", "Mid", "Senior", "Lead"] },
+        "salaryRange": { "type": "string", "maxLength": 100 },
+        "requiredSkills": { "type": "array", "maxLength": 30 },
+        "preferredSkills": { "type": "array", "maxLength": 30 },
+        "description": { "type": "string", "minLength": 10, "maxLength": 10000 },
+        "applyUrl": { "type": "string", "maxLength": 1000 },
+        "status": { "type": "string", "enum": ["open", "closed"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["recruiterId", "title", "companyName", "location", "workMode", "employmentType", "experienceLevel", "requiredSkills", "description", "status", "createdAt", "updatedAt"]
+    },
+    "SavedJob": {
+      "title": "SavedJob",
+      "description": "Bookmarked job vacancy for a candidate.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "jobKey": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "company": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "location": { "type": "string", "maxLength": 160 },
+        "salary": { "type": "string", "maxLength": 120 },
+        "source": { "type": "string", "maxLength": 80 },
+        "applyUrl": { "type": "string", "maxLength": 1000 },
+        "description": { "type": "string", "maxLength": 5000 },
+        "matchScore": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "jobKey", "title", "company", "source", "createdAt"]
+    },
+    "JobApplication": {
+      "title": "JobApplication",
+      "description": "Tracked job application status and notes for a candidate.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "jobKey": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "company": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "location": { "type": "string", "maxLength": 160 },
+        "source": { "type": "string", "maxLength": 80 },
+        "applyUrl": { "type": "string", "maxLength": 1000 },
+        "status": { "type": "string", "enum": ["saved", "applied", "interviewing", "offer", "rejected"] },
+        "notes": { "type": "string", "maxLength": 2000 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "jobKey", "title", "company", "status", "createdAt", "updatedAt"]
+    },
+    "SkillGapReport": {
+      "title": "SkillGapReport",
+      "description": "Saved skill gap comparison against a target role or job description.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "targetRole": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "matchedSkills": { "type": "array", "maxLength": 60 },
+        "missingSkills": { "type": "array", "maxLength": 60 },
+        "uncertainSkills": { "type": "array", "maxLength": 40 },
+        "additionalSkills": { "type": "array", "maxLength": 60 },
+        "matchPercentage": { "type": "number" },
+        "missingSkillPlans": { "type": "array", "maxLength": 30 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "targetRole", "matchedSkills", "missingSkills", "matchPercentage", "createdAt"]
+    },
+    "RecruiterShortlist": {
+      "title": "RecruiterShortlist",
+      "description": "Recruiter-saved shortlist entry for an opted-in candidate.",
+      "type": "object",
+      "properties": {
+        "recruiterId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "candidateUid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "candidateName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "targetRole": { "type": "string", "maxLength": 120 },
+        "jobId": { "type": "string", "maxLength": 128 },
+        "jobTitle": { "type": "string", "maxLength": 160 },
+        "matchPercentage": { "type": "number" },
+        "status": { "type": "string", "enum": ["shortlisted", "contacted", "interview", "archived"] },
+        "notes": { "type": "string", "maxLength": 2000 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["recruiterId", "candidateUid", "candidateName", "status", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserAccount" },
+      "description": "Owner-only user account document containing private email and account type."
+    },
+    "/candidateProfiles/{userId}": {
+      "schema": { "$ref": "#/entities/CandidateProfile" },
+      "description": "Candidate profile readable by owner, and discoverable by recruiters only when shareWithRecruiters is true."
+    },
+    "/recruiterProfiles/{userId}": {
+      "schema": { "$ref": "#/entities/RecruiterProfile" },
+      "description": "Recruiter company profile readable by signed-in users and writable only by owner."
+    },
+    "/resumes/{resumeId}": {
+      "schema": { "$ref": "#/entities/ResumeDocument" },
+      "description": "Owner-only uploaded resume text and structured extractions."
+    },
+    "/resumeAnalyses/{analysisId}": {
+      "schema": { "$ref": "#/entities/ResumeAnalysis" },
+      "description": "Owner-only Gemini resume analysis reports and 100-point rubric scores."
+    },
+    "/skills/{skillId}": {
+      "schema": { "$ref": "#/entities/SkillCatalogItem" },
+      "description": "Public read-only skill catalog for the 10 technical domains."
+    },
+    "/courses/{courseId}": {
+      "schema": { "$ref": "#/entities/CourseCatalogItem" },
+      "description": "Public read-only course modules."
+    },
+    "/lessons/{lessonId}": {
+      "schema": { "$ref": "#/entities/LessonCatalogItem" },
+      "description": "Public read-only step-by-step lessons."
+    },
+    "/quizzes/{quizId}": {
+      "schema": { "$ref": "#/entities/QuizCatalogItem" },
+      "description": "Public read-only quiz definitions."
+    },
+    "/quizResults/{resultId}": {
+      "schema": { "$ref": "#/entities/QuizResult" },
+      "description": "Owner-only quiz attempt scores and topic feedback."
+    },
+    "/learningProgress/{progressId}": {
+      "schema": { "$ref": "#/entities/LearningProgress" },
+      "description": "Owner-only skill completion progress, weekly goals, and personalized roadmaps."
+    },
+    "/jobListings/{jobId}": {
+      "schema": { "$ref": "#/entities/JobListing" },
+      "description": "Recruiter-published job vacancies readable by authenticated users and managed by owning recruiter."
+    },
+    "/savedJobs/{savedId}": {
+      "schema": { "$ref": "#/entities/SavedJob" },
+      "description": "Owner-only bookmarked jobs."
+    },
+    "/jobApplications/{appId}": {
+      "schema": { "$ref": "#/entities/JobApplication" },
+      "description": "Owner-only tracked job applications."
+    },
+    "/skillGapReports/{reportId}": {
+      "schema": { "$ref": "#/entities/SkillGapReport" },
+      "description": "Owner-only skill-gap analysis reports."
+    },
+    "/recruiterShortlists/{shortlistId}": {
+      "schema": { "$ref": "#/entities/RecruiterShortlist" },
+      "description": "Recruiter-only shortlisted candidate entries."
+    }
+  }
+}
