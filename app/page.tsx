@@ -195,6 +195,33 @@ export default function LandingPage() {
               </p>
             </div>
           </div>
+
+          {/* Direct Platform Directory */}
+          <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+            {[
+              { label: 'Candidate Dashboard', href: '/dashboard', desc: 'Progress & scores' },
+              { label: 'Tutorials & Courses', href: '/courses', desc: 'Beginner to advanced' },
+              { label: 'Practice Quizzes', href: '/quizzes', desc: 'Timed tests & AI Qs' },
+              { label: 'AI Resume Analyzer', href: '/resume-analyzer', desc: 'PDF & DOCX scoring' },
+              { label: 'Skill Gap Analyzer', href: '/skill-gap', desc: 'Role & JD matching' },
+              { label: 'Find Jobs', href: '/jobs', desc: 'Real search & match' },
+              { label: 'My Improvement Plan', href: '/learning-plan', desc: 'Weekly AI roadmap' },
+              { label: 'My Applications', href: '/applications', desc: 'Bookmarks & status' },
+              { label: 'Recruiter Hub', href: '/recruiter', desc: 'Post jobs & shortlist' },
+              { label: 'Profile & Privacy', href: '/profile', desc: 'Skills & opt-in' },
+            ].map((mod) => (
+              <Link
+                key={mod.href}
+                href={mod.href}
+                className="group rounded-lg border border-slate-200 bg-white px-4 py-3 hover:border-blue-400 transition-colors"
+              >
+                <p className="text-xs font-semibold text-[#0B1221] group-hover:text-blue-700 truncate">
+                  {mod.label}
+                </p>
+                <p className="mt-0.5 text-[11px] text-slate-500 truncate">{mod.desc}</p>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 

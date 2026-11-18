@@ -44,8 +44,22 @@ Configure secrets in `.env` or your hosting environment:
 - Firebase client configuration is stored in `firebase-applet-config.json`.
 - **Email/Password Sign-In**: Google Sign-In works immediately; if using Email/Password sign-up/login, ensure the **Email/Password** sign-in provider is enabled in Firebase Console → Authentication → Sign-in method.
 
-## 5. Running & Deploying
+## 5. Running Locally & Deploying from GitHub
 
+> **Important Note on GitHub Pages vs. Full-Stack Hosting:**
+> Enabling **GitHub Pages** directly from the `main` branch only serves static files (and falls back to rendering this `README.md` intro because Next.js server routes and `GEMINI_API_KEY` cannot execute on static GitHub Pages). To deploy the **full interactive website** from your GitHub repository (including `/api/*` Gemini AI routes, PDF/DOCX parsing, and Firebase Auth), deploy via a Next.js-capable host connected to GitHub:
+
+### Option A: Deploy Full Website from GitHub using Vercel (Recommended)
+1. Push this repository to GitHub.
+2. Go to [vercel.com/new](https://vercel.com/new) and import your GitHub repository (`vercel.json` is pre-configured).
+3. Add environment variable `GEMINI_API_KEY` (and optional `ADZUNA_APP_ID`, `ADZUNA_APP_KEY`, `JOOBLE_API_KEY`) in Project Settings → Environment Variables.
+4. Deploy.
+5. In **Firebase Console → Authentication → Settings → Authorized domains**, add your deployed domain (for example, `your-project.vercel.app`) so Google Sign-In works on the live site.
+
+### Option B: Deploy Full Website from GitHub using Docker (Cloud Run / Render / Railway)
+Use the included `Dockerfile` (built around Next.js `output: 'standalone'`) and set `GEMINI_API_KEY` in your service environment variables. Add the resulting public hostname to Firebase Authorized Domains.
+
+### Local Commands
 ```bash
 npm install
 npm run dev       # Starts development server on port 3000
